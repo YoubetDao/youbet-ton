@@ -1,0 +1,654 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "youbet_Bet.headers.fc";
+#include "youbet_Bet.stdlib.fc";
+#include "youbet_Bet.storage.fc";
+
+;;
+;; Contract Bet functions
+;;
+
+(slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $Bet$_contract_init(slice $owner) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = (null(), null(), null(), null(), null(), null(), null(), null(), null(), null(), null(), null(), null(), null(), null(), null());
+    $self'owner = $owner;
+    $self'tasksLen = 0;
+    $self'goalsLen = 0;
+    $self'userGoals = null();
+    $self'goals = null();
+    $self'walletToGithub = null();
+    $self'githubToWallet = null();
+    $self'userPoints = null();
+    $self'userCompletedTasks = null();
+    $self'projects = null();
+    $self'projectIds = null();
+    $self'totalRewards = null();
+    $self'claimedRewards = null();
+    $self'projectCount = 0;
+    return ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_walletToGithub((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_0 = $self'walletToGithub;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_0);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_createGoalFunc((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $name, slice $description, int $requiredStake, int $taskCount, int $goalType) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    int $goalId = $self'goalsLen;
+    var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_constructor_id_name_description_requiredStake_taskCount_goalType_creator_completed_participants_participantsCount_isParticipant_isClaimed_completedTaskCount_rewards($goalId, $name, $description, $requiredStake, $taskCount, $goalType, $self'owner, false, null(), 0, null(), null(), null(), null());
+    $self'goals~__tact_dict_set_uint_cell(256, $goalId, $Goal$_store_cell(($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards)));
+    $self'goalsLen = ($self'goalsLen + 1);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_createGoalSolo((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $name, slice $description, int $requiredStake, int $taskCount) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createGoalFunc($name, $description, $requiredStake, $taskCount, 0);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_createGoal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $name, slice $description, int $requiredStake, int $taskCount) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createGoalFunc($name, $description, $requiredStake, $taskCount, 1);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_linkWallet((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $address, slice $github) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    tuple $walletUser = $GithubUser$_load_opt(__tact_dict_get_slice_cell($self'walletToGithub, 267, $address));
+    throw_unless(44355, null?($walletUser));
+    var ($githubUser'githubUsername) = $GithubUser$_constructor_githubUsername($github);
+    $self'walletToGithub~__tact_dict_set_slice_cell(267, $address, $GithubUser$_store_cell(($githubUser'githubUsername)));
+    int $githubHash = string_hash($github);
+    $self'githubToWallet~__tact_dict_set_uint_slice(256, $githubHash, $address);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_stakeAndUnlockGoal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, int $goalId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    slice $sender = __tact_context_get_sender();
+    throw_unless(32038, ($goalId < $self'goalsLen));
+    var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_not_null($Goal$_load_opt(__tact_dict_get_uint_cell($self'goals, 256, $goalId)));
+    if (null?($goal'participants)) {
+        $goal'participants = null();
+    }
+    $goal'participants~__tact_dict_set_uint_slice(256, $goal'participantsCount, $self'owner);
+    $goal'participantsCount = ($goal'participantsCount + 1);
+    $goal'isParticipant~__tact_dict_set_slice_int(267, $sender, true, 1);
+    tuple $userGoals = $UserGoals$_load_opt(__tact_dict_get_slice_cell($self'userGoals, 267, $sender));
+    if (null?($userGoals)) {
+        $userGoals = $UserGoals$_as_optional($UserGoals$_constructor_address_goals_goalsLen($self'owner, null(), 0));
+    }
+    var ($unwrappedUserGoals'address, $unwrappedUserGoals'goals, $unwrappedUserGoals'goalsLen) = $UserGoals$_not_null($userGoals);
+    $unwrappedUserGoals'goals~__tact_dict_set_uint_uint(256, $unwrappedUserGoals'goalsLen, $goalId, 256);
+    $unwrappedUserGoals'goalsLen = ($unwrappedUserGoals'goalsLen + 1);
+    $self'userGoals~__tact_dict_set_slice_cell(267, $sender, $UserGoals$_store_cell(($unwrappedUserGoals'address, $unwrappedUserGoals'goals, $unwrappedUserGoals'goalsLen)));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_confirmTaskCompletion((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, int $goalId, slice $user) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_not_null($Goal$_load_opt(__tact_dict_get_uint_cell($self'goals, 256, $goalId)));
+    int $completedTaskCount = __tact_not_null(__tact_dict_get_slice_uint($goal'completedTaskCount, 267, $user, 256));
+    $goal'completedTaskCount~__tact_dict_set_slice_uint(267, $user, ($completedTaskCount + 1), 256);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_claimStake((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, int $goalId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_not_null($Goal$_load_opt(__tact_dict_get_uint_cell($self'goals, 256, $goalId)));
+    slice $sender = __tact_context_get_sender();
+    int $reward = 0;
+    if (($goal'goalType == 0)) {
+        $reward = (($goal'requiredStake * __tact_not_null(__tact_dict_get_slice_uint($goal'completedTaskCount, 267, $sender, 256))) / $goal'taskCount);
+    } else {
+        $reward = __tact_not_null(__tact_dict_get_slice_uint($goal'rewards, 267, $sender, 256));
+    }
+    $global_send($SendParameters$_constructor_to_value($sender, $reward));
+    $goal'isClaimed~__tact_dict_set_slice_int(267, $sender, true, 1);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_settleGoal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, int $goalId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_not_null($Goal$_load_opt(__tact_dict_get_uint_cell($self'goals, 256, $goalId)));
+    int $totalStake = 0;
+    int $totalCompletedTasks = 0;
+    int $totalParticipants = $goal'participantsCount;
+    int $fee = (($totalParticipants * $goal'requiredStake) / 100);
+    var ($fresh$underscore_2, $participant, $fresh$flag_1) = __tact_dict_min_uint_slice($goal'participants, 256);
+    while ($fresh$flag_1) {
+        $totalStake = ($totalStake + $goal'requiredStake);
+        $totalCompletedTasks = ($totalCompletedTasks + __tact_not_null(__tact_dict_get_slice_uint($goal'completedTaskCount, 267, $participant, 256)));
+        ($fresh$underscore_2, $participant, $fresh$flag_1) = __tact_dict_next_uint_slice($goal'participants, 256, $fresh$underscore_2);
+    }
+    $totalStake = ($totalStake - $fee);
+    var ($i, $participant, $fresh$flag_3) = __tact_dict_min_uint_slice($goal'participants, 256);
+    while ($fresh$flag_3) {
+        int $userCompletedTaskCount = __tact_not_null(__tact_dict_get_slice_uint($goal'completedTaskCount, 267, $participant, 256));
+        if (($userCompletedTaskCount > 0)) {
+            int $reward = (($totalStake * $userCompletedTaskCount) / $totalCompletedTasks);
+            $goal'rewards~__tact_dict_set_slice_uint(267, $participant, $reward, 256);
+        }
+        ($i, $participant, $fresh$flag_3) = __tact_dict_next_uint_slice($goal'participants, 256, $i);
+    }
+    $goal'completed = true;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_allGoals((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    cell $results = null();
+    var ($goalId, $goal, $fresh$flag_4) = __tact_dict_min_uint_cell($self'goals, 256);
+    while ($fresh$flag_4) {
+        var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_not_null($Goal$_load_opt($goal));
+        var ($goalInfo'id, $goalInfo'name, $goalInfo'description, $goalInfo'requiredStake, $goalInfo'creator, $goalInfo'completed, $goalInfo'participants, $goalInfo'goalType) = $GoalInfo$_constructor_id_name_description_requiredStake_creator_completed_participants_goalType($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'goalType);
+        $results~__tact_dict_set_uint_cell(256, $goalId, $GoalInfo$_store_cell(($goalInfo'id, $goalInfo'name, $goalInfo'description, $goalInfo'requiredStake, $goalInfo'creator, $goalInfo'completed, $goalInfo'participants, $goalInfo'goalType)));
+        ($goalId, $goal, $fresh$flag_4) = __tact_dict_next_uint_cell($self'goals, 256, $goalId);
+    }
+    var $fresh$ret_5 = $results;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_5);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_userGoals((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $address) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    tuple $uGoals = $UserGoals$_load_opt(__tact_dict_get_slice_cell($self'userGoals, 267, $address));
+    if (null?($uGoals)) {
+        var $fresh$ret_6 = null();
+        return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_6);
+    }
+    var $fresh$ret_7 = $UserGoals$_get_goals($UserGoals$_not_null($uGoals));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_7);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), (int, slice, slice, int, slice, int, cell, int)) $Bet$_fun_goalDetails((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, int $goalId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'participantsCount, $goal'taskCount, $goal'goalType, $goal'isParticipant, $goal'isClaimed, $goal'completedTaskCount, $goal'rewards) = $Goal$_not_null($Goal$_load_opt(__tact_dict_get_uint_cell($self'goals, 256, $goalId)));
+    var ($goalInfo'id, $goalInfo'name, $goalInfo'description, $goalInfo'requiredStake, $goalInfo'creator, $goalInfo'completed, $goalInfo'participants, $goalInfo'goalType) = $GoalInfo$_constructor_id_name_description_requiredStake_creator_completed_participants_goalType($goal'id, $goal'name, $goal'description, $goal'requiredStake, $goal'creator, $goal'completed, $goal'participants, $goal'goalType);
+    var $fresh$ret_8 = ($goalInfo'id, $goalInfo'name, $goalInfo'description, $goalInfo'requiredStake, $goalInfo'creator, $goalInfo'completed, $goalInfo'participants, $goalInfo'goalType);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_8);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_allTasks((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_9 = $self'tasks;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_9);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_unconfirmedTasks((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    cell $results = null();
+    int $count = 0;
+    var ($taskId, $task, $fresh$flag_10) = __tact_dict_min_uint_cell($self'tasks, 256);
+    while ($fresh$flag_10) {
+        var ($task'id, $task'name, $task'completed, $task'projectId, $task'taskCompleter) = $Task$_not_null($Task$_load_opt($task));
+        if ((~ $task'completed)) {
+            $results~__tact_dict_set_uint_cell(256, $count, $Task$_store_cell(($task'id, $task'name, $task'completed, $task'projectId, $task'taskCompleter)));
+            $count = ($count + 1);
+        }
+        ($taskId, $task, $fresh$flag_10) = __tact_dict_next_uint_cell($self'tasks, 256, $taskId);
+    }
+    var $fresh$ret_11 = $results;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_11);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_createProject((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $projectId, slice $name) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    int $projectIdHash = string_hash($projectId);
+    throw_unless(50111, null?($Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, $projectIdHash))));
+    var ($newProject'id, $newProject'userPoints, $newProject'participants, $newProject'participantsCount) = $Project$_constructor_id_userPoints_participants_participantsCount($projectId, null(), null(), 0);
+    $self'projects~__tact_dict_set_uint_cell(256, $projectIdHash, $Project$_store_cell(($newProject'id, $newProject'userPoints, $newProject'participants, $newProject'participantsCount)));
+    $self'projectIds~__tact_dict_set_uint_uint(256, $self'projectCount, $projectIdHash, 256);
+    $self'projectCount = ($self'projectCount + 1);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_createTask((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $id, slice $name, slice $projectId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    int $projectIdHash = string_hash($projectId);
+    tuple $project = $Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, $projectIdHash));
+    if (null?($project)) {
+        ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createProject($projectId, $name);
+    }
+    int $taskIdHash = string_hash($id);
+    throw_unless(16969, null?(__tact_dict_get_uint_uint($self'taskIndices, 256, $taskIdHash, 256)));
+    var ($task'id, $task'name, $task'completed, $task'projectId, $task'taskCompleter) = $Task$_constructor_id_name_completed_projectId_taskCompleter($id, $name, false, $projectId, $self'owner);
+    $self'tasks~__tact_dict_set_uint_cell(256, $self'tasksLen, $Task$_store_cell(($task'id, $task'name, $task'completed, $task'projectId, $task'taskCompleter)));
+    $self'taskIndices~__tact_dict_set_uint_uint(256, $taskIdHash, $self'tasksLen, 256);
+    $self'tasksLen = ($self'tasksLen + 1);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_confirmTask((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $taskId, slice $github, int $taskPoints) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    int $taskIndex = __tact_not_null(__tact_dict_get_uint_uint($self'taskIndices, 256, string_hash($taskId), 256));
+    var ($task'id, $task'name, $task'completed, $task'projectId, $task'taskCompleter) = $Task$_not_null($Task$_load_opt(__tact_dict_get_uint_cell($self'tasks, 256, $taskIndex)));
+    slice $userAddress = __tact_not_null(__tact_dict_get_uint_slice($self'githubToWallet, 256, string_hash($github)));
+    $task'completed = true;
+    $task'taskCompleter = $userAddress;
+    var ($userCompletedTasks'address, $userCompletedTasks'tasks, $userCompletedTasks'tasksLen) = $CompletedTasks$_not_null($CompletedTasks$_load_opt(__tact_dict_get_slice_cell($self'userCompletedTasks, 267, $userAddress)));
+    int $taskIdHash = string_hash($taskId);
+    $userCompletedTasks'tasks~__tact_dict_set_uint_uint(256, $userCompletedTasks'tasksLen, $taskIdHash, 256);
+    $userCompletedTasks'tasksLen = ($userCompletedTasks'tasksLen + 1);
+    $self'userCompletedTasks~__tact_dict_set_slice_cell(267, $userAddress, $CompletedTasks$_store_cell(($userCompletedTasks'address, $userCompletedTasks'tasks, $userCompletedTasks'tasksLen)));
+    $self'userPoints~__tact_dict_set_slice_uint(267, $userAddress, (__tact_not_null(__tact_dict_get_slice_uint($self'userPoints, 267, $userAddress, 256)) + $taskPoints), 256);
+    var ($project'id, $project'userPoints, $project'participants, $project'participantsCount) = $Project$_not_null($Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, string_hash($task'projectId))));
+    int $isParticipant = false;
+    if ((~ null?(__tact_dict_get_slice_uint($project'userPoints, 267, $userAddress, 256)))) {
+        $isParticipant = true;
+    }
+    if ((~ $isParticipant)) {
+        $project'participants~__tact_dict_set_uint_slice(256, $project'participantsCount, $userAddress);
+        $project'participantsCount = ($project'participantsCount + 1);
+    }
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_donateToProject((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $projectId, int $amount) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($project'id, $project'userPoints, $project'participants, $project'participantsCount) = $Project$_not_null($Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, string_hash($projectId))));
+    int $totalProjectPoints = 0;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    var ($fresh$underscore_13, $participant, $fresh$flag_12) = __tact_dict_min_uint_slice($project'participants, 256);
+    while ($fresh$flag_12) {
+        $totalProjectPoints = ($totalProjectPoints + __tact_not_null(__tact_dict_get_slice_uint($self'userPoints, 267, $participant, 256)));
+        ($fresh$underscore_13, $participant, $fresh$flag_12) = __tact_dict_next_uint_slice($project'participants, 256, $fresh$underscore_13);
+    }
+    if (($totalProjectPoints > 0)) {
+        var ($fresh$underscore_15, $participant, $fresh$flag_14) = __tact_dict_min_uint_slice($project'participants, 256);
+        while ($fresh$flag_14) {
+            int $userShare = ((__tact_not_null(__tact_dict_get_slice_uint($self'userPoints, 267, $participant, 256)) * $ctx'value) / $totalProjectPoints);
+            $self'totalRewards~__tact_dict_set_slice_uint(267, $participant, (__tact_not_null(__tact_dict_get_slice_uint($self'totalRewards, 267, $participant, 256)) + $userShare), 256);
+            ($fresh$underscore_15, $participant, $fresh$flag_14) = __tact_dict_next_uint_slice($project'participants, 256, $fresh$underscore_15);
+        }
+    }
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_allProjectIds((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    cell $results = null();
+    var ($projectId, $fresh$underscore_17, $fresh$flag_16) = __tact_dict_min_uint_uint($self'projectIds, 256, 256);
+    while ($fresh$flag_16) {
+        $results~__tact_dict_set_uint_cell(256, $projectId, $Project$_store_cell($Project$_not_null($Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, $projectId)))));
+        ($projectId, $fresh$underscore_17, $fresh$flag_16) = __tact_dict_next_uint_uint($self'projectIds, 256, $projectId, 256);
+    }
+    var $fresh$ret_18 = $results;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_18);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_projectParticipants((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $projectId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($project'id, $project'userPoints, $project'participants, $project'participantsCount) = $Project$_not_null($Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, string_hash($projectId))));
+    var $fresh$ret_19 = $project'participants;
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_19);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), int) $Bet$_fun_projectUserPoints((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $projectId, slice $user) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var ($project'id, $project'userPoints, $project'participants, $project'participantsCount) = $Project$_not_null($Project$_load_opt(__tact_dict_get_uint_cell($self'projects, 256, string_hash($projectId))));
+    var $fresh$ret_20 = __tact_not_null(__tact_dict_get_slice_uint($project'userPoints, 267, $user, 256));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_20);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), ()) $Bet$_fun_claimReward((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $projectId) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    int $reward = (__tact_not_null(__tact_dict_get_slice_uint($self'totalRewards, 267, __tact_context_get_sender(), 256)) - __tact_not_null(__tact_dict_get_slice_uint($self'claimedRewards, 267, __tact_context_get_sender(), 256)));
+    $self'claimedRewards~__tact_dict_set_slice_uint(267, __tact_context_get_sender(), (__tact_not_null(__tact_dict_get_slice_uint($self'claimedRewards, 267, __tact_context_get_sender(), 256)) + $reward), 256);
+    $global_send($SendParameters$_constructor_to_value(__tact_context_get_sender(), $reward));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), int) $Bet$_fun_totalRewards((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $user) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_21 = __tact_not_null(__tact_dict_get_slice_uint($self'totalRewards, 267, $user, 256));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_21);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), int) $Bet$_fun_claimedRewards((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $user) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_22 = __tact_not_null(__tact_dict_get_slice_uint($self'claimedRewards, 267, $user, 256));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_22);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), int) $Bet$_fun_userPoints((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $user) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_23 = __tact_not_null(__tact_dict_get_slice_uint($self'userPoints, 267, $user, 256));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_23);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), cell) $Bet$_fun_userCompletedTasks((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $user) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_24 = $CompletedTasks$_get_tasks($CompletedTasks$_not_null($CompletedTasks$_load_opt(__tact_dict_get_slice_cell($self'userCompletedTasks, 267, $user))));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_24);
+}
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), slice) $Bet$_fun_githubByWallet((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, slice $wallet) impure inline_ref {
+    var (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)) = $self;
+    var $fresh$ret_25 = $GithubUser$_get_githubUsername($GithubUser$_not_null($GithubUser$_load_opt(__tact_dict_get_slice_cell($self'walletToGithub, 267, $wallet))));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), $fresh$ret_25);
+}
+
+;;
+;; Receivers of a Contract Bet
+;;
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_CreateGoal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (int, slice, slice, int, int) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'goalType, $msg'name, $msg'description, $msg'requiredStake, $msg'taskCount) = $msg;
+    if (($msg'goalType == 0)) {
+        ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createGoalSolo($msg'name, $msg'description, $msg'requiredStake, $msg'taskCount);
+    } else {
+        ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createGoal($msg'name, $msg'description, $msg'requiredStake, $msg'taskCount);
+    }
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_LinkWallet((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (slice, slice) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'address, $msg'github) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_linkWallet($msg'address, $msg'github);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_StakeAndUnlockGoal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (int) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'goalId) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_stakeAndUnlockGoal($msg'goalId);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_ConfirmTaskCompletion((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (int, slice) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'goalId, $msg'user) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_confirmTaskCompletion($msg'goalId, $msg'user);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_ClaimStake((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (int) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'goalId) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_claimStake($msg'goalId);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_SettleGoal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (int) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'goalId) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_settleGoal($msg'goalId);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_CreateProject((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (slice, slice) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'projectId, $msg'name) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createProject($msg'projectId, $msg'name);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_CreateTask((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (slice, slice, slice) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'id, $msg'name, $msg'projectId) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_createTask($msg'id, $msg'name, $msg'projectId);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_ConfirmTask((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (slice, slice, int) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'taskId, $msg'github, $msg'taskPoints) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_confirmTask($msg'taskId, $msg'github, $msg'taskPoints);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_DonateToProject((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (slice, int) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'projectId, $msg'amount) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_donateToProject($msg'projectId, $msg'amount);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_ClaimReward((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (slice) $msg) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($msg'projectId) = $msg;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_claimReward($msg'projectId);
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+(((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell)), ()) $Bet$_internal_binary_Deploy((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards)~$Bet$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'goals, $self'goalsLen, $self'tasks, $self'tasksLen, $self'taskIndices, $self'userGoals, $self'walletToGithub, $self'githubToWallet, $self'userPoints, $self'userCompletedTasks, $self'projects, $self'projectIds, $self'projectCount, $self'totalRewards, $self'claimedRewards), ());
+}
+
+;;
+;; Get methods of a Contract Bet
+;;
+
+_ %walletToGithub() method_id(121854) {
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_walletToGithub();
+    return res;
+}
+
+_ %allGoals() method_id(75913) {
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_allGoals();
+    return res;
+}
+
+_ %userGoals(slice $address) method_id(128871) {
+    slice $address = __tact_verify_address($address);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_userGoals($address);
+    return res;
+}
+
+_ %goalDetails(int $goalId) method_id(125729) {
+    int $goalId = $goalId;
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_goalDetails($goalId);
+    return $GoalInfo$_to_external(res);
+}
+
+_ %allTasks() method_id(120015) {
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_allTasks();
+    return res;
+}
+
+_ %unconfirmedTasks() method_id(87732) {
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_unconfirmedTasks();
+    return res;
+}
+
+_ %allProjectIds() method_id(97418) {
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_allProjectIds();
+    return res;
+}
+
+_ %projectParticipants(slice $projectId) method_id(69855) {
+    slice $projectId = $projectId;
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_projectParticipants($projectId);
+    return res;
+}
+
+_ %projectUserPoints(slice $projectId, slice $user) method_id(128098) {
+    slice $projectId = $projectId;
+    slice $user = __tact_verify_address($user);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_projectUserPoints($projectId, $user);
+    return res;
+}
+
+_ %totalRewards(slice $user) method_id(126318) {
+    slice $user = __tact_verify_address($user);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_totalRewards($user);
+    return res;
+}
+
+_ %claimedRewards(slice $user) method_id(87130) {
+    slice $user = __tact_verify_address($user);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_claimedRewards($user);
+    return res;
+}
+
+_ %userPoints(slice $user) method_id(71421) {
+    slice $user = __tact_verify_address($user);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_userPoints($user);
+    return res;
+}
+
+_ %userCompletedTasks(slice $user) method_id(92362) {
+    slice $user = __tact_verify_address($user);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_userCompletedTasks($user);
+    return res;
+}
+
+_ %githubByWallet(slice $wallet) method_id(128676) {
+    slice $wallet = __tact_verify_address($wallet);
+    var self = $Bet$_contract_load();
+    var res = self~$Bet$_fun_githubByWallet($wallet);
+    return res;
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract Bet
+;;
+
+((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell), int) $Bet$_contract_router_internal((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive CreateGoal message
+    if (op == 2583046920) {
+        var msg = in_msg~$CreateGoal$_load();
+        self~$Bet$_internal_binary_CreateGoal(msg);
+        return (self, true);
+    }
+    
+    ;; Receive LinkWallet message
+    if (op == 1864514037) {
+        var msg = in_msg~$LinkWallet$_load();
+        self~$Bet$_internal_binary_LinkWallet(msg);
+        return (self, true);
+    }
+    
+    ;; Receive StakeAndUnlockGoal message
+    if (op == 1577787111) {
+        var msg = in_msg~$StakeAndUnlockGoal$_load();
+        self~$Bet$_internal_binary_StakeAndUnlockGoal(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ConfirmTaskCompletion message
+    if (op == 2551293740) {
+        var msg = in_msg~$ConfirmTaskCompletion$_load();
+        self~$Bet$_internal_binary_ConfirmTaskCompletion(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ClaimStake message
+    if (op == 1909137102) {
+        var msg = in_msg~$ClaimStake$_load();
+        self~$Bet$_internal_binary_ClaimStake(msg);
+        return (self, true);
+    }
+    
+    ;; Receive SettleGoal message
+    if (op == 785101705) {
+        var msg = in_msg~$SettleGoal$_load();
+        self~$Bet$_internal_binary_SettleGoal(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CreateProject message
+    if (op == 4157679283) {
+        var msg = in_msg~$CreateProject$_load();
+        self~$Bet$_internal_binary_CreateProject(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CreateTask message
+    if (op == 2787876066) {
+        var msg = in_msg~$CreateTask$_load();
+        self~$Bet$_internal_binary_CreateTask(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ConfirmTask message
+    if (op == 767560509) {
+        var msg = in_msg~$ConfirmTask$_load();
+        self~$Bet$_internal_binary_ConfirmTask(msg);
+        return (self, true);
+    }
+    
+    ;; Receive DonateToProject message
+    if (op == 2142086217) {
+        var msg = in_msg~$DonateToProject$_load();
+        self~$Bet$_internal_binary_DonateToProject(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ClaimReward message
+    if (op == 1207586151) {
+        var msg = in_msg~$ClaimReward$_load();
+        self~$Bet$_internal_binary_ClaimReward(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$Bet$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $Bet$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$Bet$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $Bet$_contract_store(self);
+}

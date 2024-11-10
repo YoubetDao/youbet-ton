@@ -1,0 +1,641 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value(slice $to, int $value) inline {
+    return (true, $to, $value, 0, null(), null(), null());
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: Goal
+;; TLB: _ id:uint256 name:^string description:^string requiredStake:uint256 creator:address completed:bool participants:dict<uint256, address> participantsCount:uint256 taskCount:uint256 goalType:int257 isParticipant:dict<address, bool> isClaimed:dict<address, bool> completedTaskCount:dict<address, uint256> rewards:dict<address, uint256> = Goal
+;;
+
+builder $Goal$_store(builder build_0, (int, slice, slice, int, slice, int, cell, int, int, int, cell, cell, cell, cell) v) inline_ref {
+    var (v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'participantsCount, v'taskCount, v'goalType, v'isParticipant, v'isClaimed, v'completedTaskCount, v'rewards) = v;
+    build_0 = build_0.store_uint(v'id, 256);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'description).end_cell());
+    build_0 = build_0.store_uint(v'requiredStake, 256);
+    build_0 = __tact_store_address(build_0, v'creator);
+    build_0 = build_0.store_int(v'completed, 1);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_dict(v'participants);
+    build_1 = build_1.store_uint(v'participantsCount, 256);
+    build_1 = build_1.store_uint(v'taskCount, 256);
+    build_1 = build_1.store_int(v'goalType, 257);
+    build_1 = build_1.store_dict(v'isParticipant);
+    build_1 = build_1.store_dict(v'isClaimed);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_dict(v'completedTaskCount);
+    build_2 = build_2.store_dict(v'rewards);
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $Goal$_store_cell((int, slice, slice, int, slice, int, cell, int, int, int, cell, cell, cell, cell) v) inline {
+    return $Goal$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((int, slice, slice, int, slice, int, cell, int, int, int, cell, cell, cell, cell))) $Goal$_load(slice sc_0) inline_ref {
+    var v'id = sc_0~load_uint(256);
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'description = sc_0~load_ref().begin_parse();
+    var v'requiredStake = sc_0~load_uint(256);
+    var v'creator = sc_0~__tact_load_address();
+    var v'completed = sc_0~load_int(1);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'participants = sc_1~load_dict();
+    var v'participantsCount = sc_1~load_uint(256);
+    var v'taskCount = sc_1~load_uint(256);
+    var v'goalType = sc_1~load_int(257);
+    var v'isParticipant = sc_1~load_dict();
+    var v'isClaimed = sc_1~load_dict();
+    slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'completedTaskCount = sc_2~load_dict();
+    var v'rewards = sc_2~load_dict();
+    return (sc_0, (v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'participantsCount, v'taskCount, v'goalType, v'isParticipant, v'isClaimed, v'completedTaskCount, v'rewards));
+}
+
+tuple $Goal$_as_optional((int, slice, slice, int, slice, int, cell, int, int, int, cell, cell, cell, cell) v) inline {
+    var (v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'participantsCount, v'taskCount, v'goalType, v'isParticipant, v'isClaimed, v'completedTaskCount, v'rewards) = v;
+    return __tact_tuple_create_14(v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'participantsCount, v'taskCount, v'goalType, v'isParticipant, v'isClaimed, v'completedTaskCount, v'rewards);
+}
+
+tuple $Goal$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $Goal$_as_optional(sc~$Goal$_load());
+}
+
+((int, slice, slice, int, slice, int, cell, int, int, int, cell, cell, cell, cell)) $Goal$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (int vvv'id, slice vvv'name, slice vvv'description, int vvv'requiredStake, slice vvv'creator, int vvv'completed, cell vvv'participants, int vvv'participantsCount, int vvv'taskCount, int vvv'goalType, cell vvv'isParticipant, cell vvv'isClaimed, cell vvv'completedTaskCount, cell vvv'rewards) = __tact_tuple_destroy_14(v);
+    return (vvv'id, vvv'name, vvv'description, vvv'requiredStake, vvv'creator, vvv'completed, vvv'participants, vvv'participantsCount, vvv'taskCount, vvv'goalType, vvv'isParticipant, vvv'isClaimed, vvv'completedTaskCount, vvv'rewards);
+}
+
+((int, slice, slice, int, slice, int, cell, int, int, int, cell, cell, cell, cell)) $Goal$_constructor_id_name_description_requiredStake_taskCount_goalType_creator_completed_participants_participantsCount_isParticipant_isClaimed_completedTaskCount_rewards(int $id, slice $name, slice $description, int $requiredStake, int $taskCount, int $goalType, slice $creator, int $completed, cell $participants, int $participantsCount, cell $isParticipant, cell $isClaimed, cell $completedTaskCount, cell $rewards) inline {
+    return ($id, $name, $description, $requiredStake, $creator, $completed, $participants, $participantsCount, $taskCount, $goalType, $isParticipant, $isClaimed, $completedTaskCount, $rewards);
+}
+
+;;
+;; Type: GoalInfo
+;; TLB: _ id:uint256 name:^string description:^string requiredStake:uint256 creator:address completed:bool participants:dict<uint256, address> goalType:int257 = GoalInfo
+;;
+
+builder $GoalInfo$_store(builder build_0, (int, slice, slice, int, slice, int, cell, int) v) inline_ref {
+    var (v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'goalType) = v;
+    build_0 = build_0.store_uint(v'id, 256);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'description).end_cell());
+    build_0 = build_0.store_uint(v'requiredStake, 256);
+    build_0 = __tact_store_address(build_0, v'creator);
+    build_0 = build_0.store_int(v'completed, 1);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_dict(v'participants);
+    build_1 = build_1.store_int(v'goalType, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+cell $GoalInfo$_store_cell((int, slice, slice, int, slice, int, cell, int) v) inline {
+    return $GoalInfo$_store(begin_cell(), v).end_cell();
+}
+
+(int, slice, slice, int, slice, int, cell, int) $GoalInfo$_to_external(((int, slice, slice, int, slice, int, cell, int)) v) inline {
+    var (v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'goalType) = v; 
+    return (v'id, v'name, v'description, v'requiredStake, v'creator, v'completed, v'participants, v'goalType);
+}
+
+((int, slice, slice, int, slice, int, cell, int)) $GoalInfo$_constructor_id_name_description_requiredStake_creator_completed_participants_goalType(int $id, slice $name, slice $description, int $requiredStake, slice $creator, int $completed, cell $participants, int $goalType) inline {
+    return ($id, $name, $description, $requiredStake, $creator, $completed, $participants, $goalType);
+}
+
+;;
+;; Type: Task
+;; TLB: _ id:^string name:^string completed:bool projectId:^string taskCompleter:address = Task
+;;
+
+builder $Task$_store(builder build_0, (slice, slice, int, slice, slice) v) inline {
+    var (v'id, v'name, v'completed, v'projectId, v'taskCompleter) = v;
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'id).end_cell());
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'name).end_cell());
+    build_0 = build_0.store_int(v'completed, 1);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'projectId).end_cell());
+    build_0 = __tact_store_address(build_0, v'taskCompleter);
+    return build_0;
+}
+
+cell $Task$_store_cell((slice, slice, int, slice, slice) v) inline {
+    return $Task$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((slice, slice, int, slice, slice))) $Task$_load(slice sc_0) inline {
+    var v'id = sc_0~load_ref().begin_parse();
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'completed = sc_0~load_int(1);
+    var v'projectId = sc_0~load_ref().begin_parse();
+    var v'taskCompleter = sc_0~__tact_load_address();
+    return (sc_0, (v'id, v'name, v'completed, v'projectId, v'taskCompleter));
+}
+
+tuple $Task$_as_optional((slice, slice, int, slice, slice) v) inline {
+    var (v'id, v'name, v'completed, v'projectId, v'taskCompleter) = v;
+    return __tact_tuple_create_5(v'id, v'name, v'completed, v'projectId, v'taskCompleter);
+}
+
+tuple $Task$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $Task$_as_optional(sc~$Task$_load());
+}
+
+((slice, slice, int, slice, slice)) $Task$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'id, slice vvv'name, int vvv'completed, slice vvv'projectId, slice vvv'taskCompleter) = __tact_tuple_destroy_5(v);
+    return (vvv'id, vvv'name, vvv'completed, vvv'projectId, vvv'taskCompleter);
+}
+
+((slice, slice, int, slice, slice)) $Task$_constructor_id_name_completed_projectId_taskCompleter(slice $id, slice $name, int $completed, slice $projectId, slice $taskCompleter) inline {
+    return ($id, $name, $completed, $projectId, $taskCompleter);
+}
+
+;;
+;; Type: Project
+;; TLB: _ id:^string userPoints:dict<address, uint256> participants:dict<uint256, address> participantsCount:uint256 = Project
+;;
+
+builder $Project$_store(builder build_0, (slice, cell, cell, int) v) inline {
+    var (v'id, v'userPoints, v'participants, v'participantsCount) = v;
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'id).end_cell());
+    build_0 = build_0.store_dict(v'userPoints);
+    build_0 = build_0.store_dict(v'participants);
+    build_0 = build_0.store_uint(v'participantsCount, 256);
+    return build_0;
+}
+
+cell $Project$_store_cell((slice, cell, cell, int) v) inline {
+    return $Project$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((slice, cell, cell, int))) $Project$_load(slice sc_0) inline {
+    var v'id = sc_0~load_ref().begin_parse();
+    var v'userPoints = sc_0~load_dict();
+    var v'participants = sc_0~load_dict();
+    var v'participantsCount = sc_0~load_uint(256);
+    return (sc_0, (v'id, v'userPoints, v'participants, v'participantsCount));
+}
+
+tuple $Project$_as_optional((slice, cell, cell, int) v) inline {
+    var (v'id, v'userPoints, v'participants, v'participantsCount) = v;
+    return __tact_tuple_create_4(v'id, v'userPoints, v'participants, v'participantsCount);
+}
+
+tuple $Project$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $Project$_as_optional(sc~$Project$_load());
+}
+
+((slice, cell, cell, int)) $Project$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'id, cell vvv'userPoints, cell vvv'participants, int vvv'participantsCount) = __tact_tuple_destroy_4(v);
+    return (vvv'id, vvv'userPoints, vvv'participants, vvv'participantsCount);
+}
+
+((slice, cell, cell, int)) $Project$_constructor_id_userPoints_participants_participantsCount(slice $id, cell $userPoints, cell $participants, int $participantsCount) inline {
+    return ($id, $userPoints, $participants, $participantsCount);
+}
+
+;;
+;; Type: UserGoals
+;; TLB: _ address:address goals:dict<uint256, uint256> goalsLen:uint256 = UserGoals
+;;
+
+builder $UserGoals$_store(builder build_0, (slice, cell, int) v) inline {
+    var (v'address, v'goals, v'goalsLen) = v;
+    build_0 = __tact_store_address(build_0, v'address);
+    build_0 = build_0.store_dict(v'goals);
+    build_0 = build_0.store_uint(v'goalsLen, 256);
+    return build_0;
+}
+
+cell $UserGoals$_store_cell((slice, cell, int) v) inline {
+    return $UserGoals$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((slice, cell, int))) $UserGoals$_load(slice sc_0) inline {
+    var v'address = sc_0~__tact_load_address();
+    var v'goals = sc_0~load_dict();
+    var v'goalsLen = sc_0~load_uint(256);
+    return (sc_0, (v'address, v'goals, v'goalsLen));
+}
+
+tuple $UserGoals$_as_optional((slice, cell, int) v) inline {
+    var (v'address, v'goals, v'goalsLen) = v;
+    return __tact_tuple_create_3(v'address, v'goals, v'goalsLen);
+}
+
+tuple $UserGoals$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $UserGoals$_as_optional(sc~$UserGoals$_load());
+}
+
+_ $UserGoals$_get_goals((slice, cell, int) v) inline {
+    var (v'address, v'goals, v'goalsLen) = v;
+    return v'goals;
+}
+
+((slice, cell, int)) $UserGoals$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'address, cell vvv'goals, int vvv'goalsLen) = __tact_tuple_destroy_3(v);
+    return (vvv'address, vvv'goals, vvv'goalsLen);
+}
+
+((slice, cell, int)) $UserGoals$_constructor_address_goals_goalsLen(slice $address, cell $goals, int $goalsLen) inline {
+    return ($address, $goals, $goalsLen);
+}
+
+;;
+;; Type: CompletedTasks
+;; TLB: _ address:address tasks:dict<uint256, uint256> tasksLen:uint256 = CompletedTasks
+;;
+
+builder $CompletedTasks$_store(builder build_0, (slice, cell, int) v) inline {
+    var (v'address, v'tasks, v'tasksLen) = v;
+    build_0 = __tact_store_address(build_0, v'address);
+    build_0 = build_0.store_dict(v'tasks);
+    build_0 = build_0.store_uint(v'tasksLen, 256);
+    return build_0;
+}
+
+cell $CompletedTasks$_store_cell((slice, cell, int) v) inline {
+    return $CompletedTasks$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((slice, cell, int))) $CompletedTasks$_load(slice sc_0) inline {
+    var v'address = sc_0~__tact_load_address();
+    var v'tasks = sc_0~load_dict();
+    var v'tasksLen = sc_0~load_uint(256);
+    return (sc_0, (v'address, v'tasks, v'tasksLen));
+}
+
+tuple $CompletedTasks$_as_optional((slice, cell, int) v) inline {
+    var (v'address, v'tasks, v'tasksLen) = v;
+    return __tact_tuple_create_3(v'address, v'tasks, v'tasksLen);
+}
+
+tuple $CompletedTasks$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $CompletedTasks$_as_optional(sc~$CompletedTasks$_load());
+}
+
+_ $CompletedTasks$_get_tasks((slice, cell, int) v) inline {
+    var (v'address, v'tasks, v'tasksLen) = v;
+    return v'tasks;
+}
+
+((slice, cell, int)) $CompletedTasks$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'address, cell vvv'tasks, int vvv'tasksLen) = __tact_tuple_destroy_3(v);
+    return (vvv'address, vvv'tasks, vvv'tasksLen);
+}
+
+;;
+;; Type: GithubUser
+;; TLB: _ githubUsername:^string = GithubUser
+;;
+
+builder $GithubUser$_store(builder build_0, (slice) v) inline {
+    var (v'githubUsername) = v;
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'githubUsername).end_cell());
+    return build_0;
+}
+
+cell $GithubUser$_store_cell((slice) v) inline {
+    return $GithubUser$_store(begin_cell(), v).end_cell();
+}
+
+(slice, ((slice))) $GithubUser$_load(slice sc_0) inline {
+    var v'githubUsername = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'githubUsername));
+}
+
+tuple $GithubUser$_as_optional((slice) v) inline {
+    var (v'githubUsername) = v;
+    return __tact_tuple_create_1(v'githubUsername);
+}
+
+tuple $GithubUser$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $GithubUser$_as_optional(sc~$GithubUser$_load());
+}
+
+_ $GithubUser$_get_githubUsername((slice) v) inline {
+    var (v'githubUsername) = v;
+    return v'githubUsername;
+}
+
+((slice)) $GithubUser$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'githubUsername) = __tact_tuple_destroy_1(v);
+    return (vvv'githubUsername);
+}
+
+((slice)) $GithubUser$_constructor_githubUsername(slice $githubUsername) inline {
+    return ($githubUsername);
+}
+
+;;
+;; Type: LinkWallet
+;; Header: 0x6f2239f5
+;; TLB: link_wallet#6f2239f5 address:address github:^string = LinkWallet
+;;
+
+(slice, ((slice, slice))) $LinkWallet$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1864514037);
+    var v'address = sc_0~__tact_load_address();
+    var v'github = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'address, v'github));
+}
+
+;;
+;; Type: CreateGoal
+;; Header: 0x99f62b08
+;; TLB: create_goal#99f62b08 goalType:int257 name:^string description:^string requiredStake:int257 taskCount:int257 = CreateGoal
+;;
+
+(slice, ((int, slice, slice, int, int))) $CreateGoal$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2583046920);
+    var v'goalType = sc_0~load_int(257);
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'description = sc_0~load_ref().begin_parse();
+    var v'requiredStake = sc_0~load_int(257);
+    var v'taskCount = sc_0~load_int(257);
+    return (sc_0, (v'goalType, v'name, v'description, v'requiredStake, v'taskCount));
+}
+
+;;
+;; Type: StakeAndUnlockGoal
+;; Header: 0x5e0b1ee7
+;; TLB: stake_and_unlock_goal#5e0b1ee7 goalId:int257 = StakeAndUnlockGoal
+;;
+
+(slice, ((int))) $StakeAndUnlockGoal$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1577787111);
+    var v'goalId = sc_0~load_int(257);
+    return (sc_0, (v'goalId));
+}
+
+;;
+;; Type: ConfirmTaskCompletion
+;; Header: 0x9811a72c
+;; TLB: confirm_task_completion#9811a72c goalId:int257 user:address = ConfirmTaskCompletion
+;;
+
+(slice, ((int, slice))) $ConfirmTaskCompletion$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2551293740);
+    var v'goalId = sc_0~load_int(257);
+    var v'user = sc_0~__tact_load_address();
+    return (sc_0, (v'goalId, v'user));
+}
+
+;;
+;; Type: ClaimStake
+;; Header: 0x71cb1ece
+;; TLB: claim_stake#71cb1ece goalId:int257 = ClaimStake
+;;
+
+(slice, ((int))) $ClaimStake$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1909137102);
+    var v'goalId = sc_0~load_int(257);
+    return (sc_0, (v'goalId));
+}
+
+;;
+;; Type: SettleGoal
+;; Header: 0x2ecbb389
+;; TLB: settle_goal#2ecbb389 goalId:int257 = SettleGoal
+;;
+
+(slice, ((int))) $SettleGoal$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 785101705);
+    var v'goalId = sc_0~load_int(257);
+    return (sc_0, (v'goalId));
+}
+
+;;
+;; Type: CreateProject
+;; Header: 0xf7d126b3
+;; TLB: create_project#f7d126b3 projectId:^string name:^string = CreateProject
+;;
+
+(slice, ((slice, slice))) $CreateProject$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 4157679283);
+    var v'projectId = sc_0~load_ref().begin_parse();
+    var v'name = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'projectId, v'name));
+}
+
+;;
+;; Type: CreateTask
+;; Header: 0xa62b9ce2
+;; TLB: create_task#a62b9ce2 id:^string name:^string projectId:^string = CreateTask
+;;
+
+(slice, ((slice, slice, slice))) $CreateTask$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2787876066);
+    var v'id = sc_0~load_ref().begin_parse();
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'projectId = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'id, v'name, v'projectId));
+}
+
+;;
+;; Type: ConfirmTask
+;; Header: 0x2dc00b3d
+;; TLB: confirm_task#2dc00b3d taskId:^string github:^string taskPoints:int257 = ConfirmTask
+;;
+
+(slice, ((slice, slice, int))) $ConfirmTask$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 767560509);
+    var v'taskId = sc_0~load_ref().begin_parse();
+    var v'github = sc_0~load_ref().begin_parse();
+    var v'taskPoints = sc_0~load_int(257);
+    return (sc_0, (v'taskId, v'github, v'taskPoints));
+}
+
+;;
+;; Type: DonateToProject
+;; Header: 0x7fada449
+;; TLB: donate_to_project#7fada449 projectId:^string amount:int257 = DonateToProject
+;;
+
+(slice, ((slice, int))) $DonateToProject$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2142086217);
+    var v'projectId = sc_0~load_ref().begin_parse();
+    var v'amount = sc_0~load_int(257);
+    return (sc_0, (v'projectId, v'amount));
+}
+
+;;
+;; Type: ClaimReward
+;; Header: 0x47fa4d67
+;; TLB: claim_reward#47fa4d67 projectId:^string = ClaimReward
+;;
+
+(slice, ((slice))) $ClaimReward$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1207586151);
+    var v'projectId = sc_0~load_ref().begin_parse();
+    return (sc_0, (v'projectId));
+}
+
+;;
+;; Type: Bet
+;;
+
+builder $Bet$_store(builder build_0, (slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) v) inline {
+    var (v'owner, v'goals, v'goalsLen, v'tasks, v'tasksLen, v'taskIndices, v'userGoals, v'walletToGithub, v'githubToWallet, v'userPoints, v'userCompletedTasks, v'projects, v'projectIds, v'projectCount, v'totalRewards, v'claimedRewards) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_dict(v'goals);
+    build_0 = build_0.store_uint(v'goalsLen, 256);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_dict(v'tasks);
+    build_1 = build_1.store_uint(v'tasksLen, 256);
+    build_1 = build_1.store_dict(v'taskIndices);
+    build_1 = build_1.store_dict(v'userGoals);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_dict(v'walletToGithub);
+    build_2 = build_2.store_dict(v'githubToWallet);
+    build_2 = build_2.store_dict(v'userPoints);
+    var build_3 = begin_cell();
+    build_3 = build_3.store_dict(v'userCompletedTasks);
+    build_3 = build_3.store_dict(v'projects);
+    build_3 = build_3.store_dict(v'projectIds);
+    build_3 = build_3.store_uint(v'projectCount, 256);
+    var build_4 = begin_cell();
+    build_4 = build_4.store_dict(v'totalRewards);
+    build_4 = build_4.store_dict(v'claimedRewards);
+    build_3 = store_ref(build_3, build_4.end_cell());
+    build_2 = store_ref(build_2, build_3.end_cell());
+    build_1 = store_ref(build_1, build_2.end_cell());
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell))) $Bet$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'goals = sc_0~load_dict();
+    var v'goalsLen = sc_0~load_uint(256);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'tasks = sc_1~load_dict();
+    var v'tasksLen = sc_1~load_uint(256);
+    var v'taskIndices = sc_1~load_dict();
+    var v'userGoals = sc_1~load_dict();
+    slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'walletToGithub = sc_2~load_dict();
+    var v'githubToWallet = sc_2~load_dict();
+    var v'userPoints = sc_2~load_dict();
+    slice sc_3 = sc_2~load_ref().begin_parse();
+    var v'userCompletedTasks = sc_3~load_dict();
+    var v'projects = sc_3~load_dict();
+    var v'projectIds = sc_3~load_dict();
+    var v'projectCount = sc_3~load_uint(256);
+    slice sc_4 = sc_3~load_ref().begin_parse();
+    var v'totalRewards = sc_4~load_dict();
+    var v'claimedRewards = sc_4~load_dict();
+    return (sc_0, (v'owner, v'goals, v'goalsLen, v'tasks, v'tasksLen, v'taskIndices, v'userGoals, v'walletToGithub, v'githubToWallet, v'userPoints, v'userCompletedTasks, v'projects, v'projectIds, v'projectCount, v'totalRewards, v'claimedRewards));
+}
+
+(slice, ((slice))) $Bet$init$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    return (sc_0, (v'owner));
+}
+
+(slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) $Bet$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Bet$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (slice $owner) = $sc~$Bet$init$_load();
+        $sc.end_parse();
+        return $Bet$_contract_init($owner);
+    }
+}
+
+() $Bet$_contract_store((slice, cell, int, cell, int, cell, cell, cell, cell, cell, cell, cell, cell, int, cell, cell) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Bet$_store(b, v);
+    set_data(b.end_cell());
+}
